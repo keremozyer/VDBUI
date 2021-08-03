@@ -1,17 +1,39 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+<div class="container">
+  <div v-if="!hasToken">
+    <LoginPage style="margin-top:50px" />
+  </div>
+  <div v-else>
+    <NavHeader />
+  </div>
+</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import {computed} from 'vue';
+import {useStore} from "vuex";
+import LoginPage from './views/LoginPage.vue'
+import NavHeader from './views/NavHeader.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    NavHeader,
+    LoginPage
+  },
+  setup() {
+    const store = useStore();
+
+    let hasToken = computed(function () {
+      return store.state.token != null
+    });
+
+    return {
+      hasToken
+    };
   }
 }
+
 </script>
 
 <style>
@@ -21,6 +43,22 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+
+.adminDiv {
+  display: inline-block;
 }
 </style>
