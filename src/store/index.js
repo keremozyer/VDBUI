@@ -4,7 +4,8 @@ import createPersistedState from "vuex-persistedstate";
 export default createStore({
   state: {
     token: null,
-    isAdmin: false
+    isAdmin: false,
+    contentBodyClass: null
   },
   mutations: {
     updateToken(state, token) {
@@ -12,6 +13,9 @@ export default createStore({
     },
     setAdminFlag(state, flag) {
       state.isAdmin = flag;
+    },
+    setContentBodyClass(state, cls) {
+      state.contentBodyClass = cls;
     }
   },
   plugins: [createPersistedState()],

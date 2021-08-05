@@ -4,6 +4,10 @@
 </div>
 <div id="searchCriterias" style="margin-top: 25px">
     <div class="searchCriteria">
+        <b>Rapor IDsi:</b>
+        <input v-model="selectedReportID" type="text" />
+    </div>
+    <div class="searchCriteria">
         <b>Arama Başlangıç Tarihi:</b>
         <datepicker v-model="startingDate" clearable="true" />
     </div>
@@ -27,6 +31,7 @@
     <b v-if="noRecords">Kayıt Bulunamadı</b><b v-else>Toplam Kayıt Sayısı: {{totalItemCount}}</b>
     <table>
         <thead>
+            <th>Rapor ID</th>
             <th>Rapor Oluşturulma Tarihi</th>
             <th>Rapor Durumu</th>
             <th>Hata Mesajı</th>
@@ -34,7 +39,8 @@
         </thead>
         <tbody>
             <tr v-for="report in reports" :key="report.id">
-                <td v-if="report.reportCreationDate != null && report.reportCreationDate != ''">{{(new Date(new Date(report.reportCreationDate) - ((new Date()).getTimezoneOffset() * 120000))).toISOString().slice(0, -5).replace('T', ' ')}}</td><td v-else></td>
+                <td><router-link :to="{path: '/reportContents', query: { reportID: report.id }}">{{report.id}}</router-link></td>
+                <td>{{utils.convertToLocalDateTime(report.reportCreationDate)}}</td>
                 <td>{{getReportStatusLabel(report.reportStatus)}}</td>
                 <td>{{report.errorMessage}}</td>
                 <td v-if="report.hasDocument"><button type="button" class="btn btn-info btn-sm" @click="downloadReport(report.id)">İndir</button></td><td v-else></td>
@@ -49,9 +55,12 @@
 
 
 <script>
+import {computed} from 'vue';
 import Datepicker from 'vue3-datepicker'
 import Multiselect from '@vueform/multiselect'
 import apiConnection from '../arch/apiConnection'
+import maps from "../maps/CodeValueMaps"
+import utilities from "../arch/utils"
 
 const defaultPageSize = 20;
 
@@ -63,21 +72,28 @@ export default {
   },
   data() {
       return {
+          selectedReportID: null,
           noRecords: true,
           startingDate: null,
           endingDate: null,
           statuses: null,
-          statusOptions: [
-              { value: "CMP", label: "Tamamlandı" },
-              { value: "PROC", label: "İşlem Sürüyor" },
-              { value: "WAIT", label: "Beklemede" },
-              { value: "ERR", label: "Hata Yaşandı" },
-          ],
           totalItemCount: 0,
           reports: [],
           pageIndexes: [],
           requestedPageSize: 0
       }
+  },
+  setup() {
+    let statusOptions = computed(function() {
+        return maps.reportStatusMap;
+    });
+    let utils = computed(function() {
+        return utilities;
+    })
+    return {
+        statusOptions,
+        utils
+    };
   },
   methods: {
       async createNewReport() {
@@ -106,6 +122,9 @@ export default {
           }
 
           var query = `VulnerabilityDetector/Report?PageIndex=${pageIndex}&PageSize=${queryPageSize}`;
+          if (this.selectedReportID != null) {
+              query += "&ReportID=" + this.selectedReportID;
+          }
           if (this.startingDate != null) {
               query += "&StartingDate=" + this.startingDate.toISOString();
           }

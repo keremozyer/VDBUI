@@ -1,10 +1,15 @@
 <template>
-<div class="container">
-  <div v-if="!hasToken">
-    <LoginPage style="margin-top:50px" />
+<div class="container" id="allContent">  
+  <div v-if="contentBodyClass == 'unclickable'" id="loader">
+    <img src="./assets/Hourglass.gif" />
   </div>
-  <div v-else>
-    <NavHeader />
+  <div id="contentBody" :class="contentBodyClass">
+    <div v-if="!hasToken">
+      <LoginPage style="margin-top:50px" />
+    </div>
+    <div v-else>
+      <NavHeader />
+    </div>
   </div>
 </div>
 </template>
@@ -28,8 +33,13 @@ export default {
       return store.state.token != null
     });
 
+    let contentBodyClass = computed(function() {
+      return store.state.contentBodyClass;
+    });
+
     return {
-      hasToken
+      hasToken,
+      contentBodyClass
     };
   }
 }
@@ -37,6 +47,22 @@ export default {
 </script>
 
 <style>
+#contentBody {
+  position: relative;
+}
+
+#loader {
+  z-index: 1000;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
+}
+
+.unclickable {
+  pointer-events: none;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

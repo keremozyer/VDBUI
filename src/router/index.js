@@ -7,6 +7,8 @@ import InventoryManagementPage from '../views/InventoryManagementPage.vue'
 import ServerManagementPage from '../views/ServerManagementPage.vue'
 import ReportsPage from '../views/ReportsPage.vue'
 import NotificationSettingsPage from '../views/NotificationSettingsPage.vue'
+import ReportContentsPage from '../views/ReportContentsPage.vue'
+import AcknowledgeCVEPage from '../views/AcknowledgeCVEPage.vue'
 
 const routes = [
   {
@@ -48,6 +50,16 @@ const routes = [
     path: '/notificationSettings',
     name: 'NotificationSettings',
     component: NotificationSettingsPage
+  },
+  {
+    path: '/reportContents',
+    name: 'ReportContents',
+    component: ReportContentsPage
+  },
+  {
+    path: '/acknowledgeCVE',
+    name: 'AcknowledgeCVE',
+    component: AcknowledgeCVEPage
   }
 ]
 

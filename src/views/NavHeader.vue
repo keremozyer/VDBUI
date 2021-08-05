@@ -6,6 +6,7 @@
     <template v-if="isAdmin"><router-link to="/serverManagement">Sunucu Yönetimi</router-link> | </template>
     <router-link to="/reports">Raporlar</router-link> |
     <template v-if="isAdmin"><router-link to="/notificationSettings">Bildirim Ayarları</router-link> | </template>
+    <template v-if="isAdmin"><router-link to="/acknowledgeCVE">Yok Sayılmış Zafiyetler</router-link> | </template>
     <router-link to="/logout">Çıkış Yap</router-link>
   </div>
   <router-view />
